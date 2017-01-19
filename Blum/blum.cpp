@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <math.h>
+#include <algorithm>
 
 using namespace std;
 
@@ -33,10 +34,24 @@ int Blum(vector<int> a, int k){
 	return a[k-1];
     }
     else{
+	//Thanks to Buddy Rohan, I forgot to sort the elements taken 5 at a time
+	//Without this the complexity is screwed up.
 	vector<int> aux;
-	for(int i = 2; i<n; i+=5){
-	    aux.push_back(a[i]);
+	int my2d[a.size()/5 + 1][5];
+	int row=-1;
+	for(int i = 0; i<a.size(); i++){
+	    if(i%5==0)
+		row++;
+	    my2d[row][i%5] = a[i];
 	}
+	for(int i= 0; i<=row; i++){
+	    sort(my2d[i],my2d[i]+5);
+	}
+	
+	for(int i = 0; i<=row; i++){
+	    aux.push_back(my2d[i][2]);
+	}
+	//The algo works even without sorting but takes more time
 
 	int m = Blum(aux,ceil(n/10.0));
 
