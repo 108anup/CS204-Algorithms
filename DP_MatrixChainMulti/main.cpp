@@ -6,6 +6,7 @@ int const size = 1000;
 int const inf = (1<<31)-1;
 int m[size][size];
 int breakat[size][size];
+int access[size][size];
 
 void matrix_chain_multiplication_bottomUp(int p[], int n){
     for(int i= 0; i<n; i++){
@@ -17,6 +18,8 @@ void matrix_chain_multiplication_bottomUp(int p[], int n){
 	    m[i][j] = inf;
 	    for(int k = i; k<j; k++){
 		int instcost = m[i][k]+m[k+1][j]+p[i]*p[k+1]*p[j+1];
+		access[i][k]+=1;
+		access[k+1][j]+=1;
 		if(m[i][j] > instcost){
 		    m[i][j] = instcost;
 		    breakat[i][j] = k;
@@ -53,6 +56,15 @@ void print_mat(int n){
     }
 
     cout<<"\n\n";
+
+    for(int i = 0; i<n; i++){
+	for(int j = i+1; j<n; j++){
+	    cout<<access[i][j]<<" "<<"("<<i<<","<<j<<")";
+	}
+	cout<<"\n";
+    }
+
+    cout<<"\n\n";
     
     for(int i = 0; i<n; i++){
 	for(int j = i+1; j<n; j++){
@@ -76,8 +88,9 @@ void build(int i, int j){
 
 int main()
 {
-    int n = 6;
+    const int n = 6;
     int p[n+1] = {30,35,15,5,10,20,25};
+    memset(access,0,sizeof(access));
 
     matrix_chain_multiplication_bottomUp(p,n);
     print_mat(n);
